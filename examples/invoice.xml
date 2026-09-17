@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2">
+  <ID>INV-1001</ID>
+  <IssueDate>2026-09-06</IssueDate>
+  <DocumentCurrencyCode>EUR</DocumentCurrencyCode>
+  <AccountingSupplierParty><Party><EndpointID>SUP-001</EndpointID></Party></AccountingSupplierParty>
+  <AccountingCustomerParty><Party><BuyerReference>BUY-001</BuyerReference></Party></AccountingCustomerParty>
+  <TaxTotal><TaxAmount>19.00</TaxAmount></TaxTotal>
+  <LegalMonetaryTotal><PayableAmount>119.00</PayableAmount></LegalMonetaryTotal>
+</Invoice>

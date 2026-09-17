@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: ai-financial-compliance-platform
+server:
+  port: 8080
+app:
+  security:
+    username: ${APP_SECURITY_USERNAME:accountant}
+    password: ${APP_SECURITY_PASSWORD:change-me}
+  tokenization:
+    secret: ${TOKENIZATION_SECRET:local-development-secret-change-me}
+  ollama:
+    base-url: ${OLLAMA_BASE_URL:http://localhost:11434}
+    model: ${OLLAMA_MODEL:llama3.2:3b}
+  payment:
+    stellar:
+      enabled: ${STELLAR_ENABLED:false}
+      horizon-url: ${STELLAR_HORIZON_URL:https://horizon-testnet.stellar.org}
+      network-passphrase: ${STELLAR_NETWORK_PASSPHRASE:Test SDF Network ; September 2015}
+  ai-security:
+    fail-closed-on-suspicious-input: true
+  risk:
+    human-review-threshold: 10000
+  audit:
+    chain-enabled: true
+logging:
+  level:
+    com.kristina.fintech: INFO
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
