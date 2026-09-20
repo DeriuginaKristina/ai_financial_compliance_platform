@@ -1,6 +1,7 @@
 package com.kristina.fintech.controller;
 
 import com.kristina.fintech.model.*;
+import com.kristina.fintech.payment.PaymentAuthorizationService;
 import com.kristina.fintech.tokenization.TokenizationService;
 import com.kristina.fintech.transaction.TransactionFactory;
 import com.kristina.fintech.payment.PaymentRail;
