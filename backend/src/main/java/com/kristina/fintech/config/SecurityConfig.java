@@ -11,29 +11,98 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 public class SecurityConfig {
-  @Bean PasswordEncoder passwordEncoder() { return PasswordEncoderFactories.createDelegatingPasswordEncoder(); }
 
-  @Bean SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+  @Bean
+  PasswordEncoder passwordEncoder() {
+    return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+  }
+
+  @Bean
+  SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http
-      // Stateless API: CSRF protection is disabled because the demo uses Authorization headers, not cookies.
-      // Production deployments should use OIDC/OAuth2 and a browser-safe CSRF strategy where applicable.
-      .csrf(csrf -> csrf.disable())
-      .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-      .authorizeHttpRequests(a -> a
-        .requestMatchers("/actuator/health", "/actuator/info").permitAll()
-        .requestMatchers("/api/**").hasRole("ACCOUNTANT")
-        .anyRequest().authenticated())
-      .httpBasic(h -> {});
+            // CORS is handled by Spring Security
+            .cors(cors -> {})
+
+            // Stateless API using Authorization headers, not cookies
+            .csrf(csrf -> csrf.disable())
+
+            .sessionManagement(s ->
+                    s.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            )
+
+            .authorizeHttpRequests(a -> a
+                    // Public health endpoints
+                    .requestMatchers("/actuator/health", "/actuator/info").permitAll()
+
+                    // Current demo authorization
+                    .requestMatchers("/api/**").hasRole("ACCOUNTANT")
+
+                    // Everything else requires authentication
+                    .anyRequest().authenticated()
+            )
+
+            .httpBasic(h -> {});
+
     return http.build();
   }
 
-  @Bean UserDetailsService users(@Value("${app.security.username}") String username,
-                                 @Value("${app.security.password}") String password,
-                                 PasswordEncoder encoder) {
-    return new InMemoryUserDetailsManager(User.withUsername(username)
-      .password(encoder.encode(password)).roles("ACCOUNTANT").build());
+  @Bean
+  CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration configuration = new CorsConfiguration();
+
+    // Change this to your frontend URL
+    configuration.setAllowedOrigins(
+            List.of("http://localhost:3000")
+    );
+
+    configuration.setAllowedMethods(
+            List.of(
+                    "GET",
+                    "POST",
+                    "PUT",
+                    "DELETE",
+                    "OPTIONS"
+            )
+    );
+
+    configuration.setAllowedHeaders(
+            List.of(
+                    "Content-Type",
+                    "Authorization",
+                    "Accept",
+                    "Origin"
+            )
+    );
+
+    configuration.setAllowCredentials(true);
+
+    UrlBasedCorsConfigurationSource source =
+            new UrlBasedCorsConfigurationSource();
+
+    source.registerCorsConfiguration("/**", configuration);
+
+    return source;
+  }
+
+  @Bean
+  UserDetailsService users(
+          @Value("${app.security.username}") String username,
+          @Value("${app.security.password}") String password,
+          PasswordEncoder encoder) {
+
+    return new InMemoryUserDetailsManager(
+            User.withUsername(username)
+                    .password(encoder.encode(password))
+                    .roles("ACCOUNTANT")
+                    .build()
+    );
   }
 }
