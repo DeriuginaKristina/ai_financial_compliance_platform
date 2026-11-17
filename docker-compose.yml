@@ -9,7 +9,7 @@ services:
       APP_SECURITY_PASSWORD: change-me
       TOKENIZATION_SECRET: change-me-in-real-deployment
       OLLAMA_BASE_URL: http://ollama:11434
-      OLLAMA_MODEL: llama3.2:3b
+      OLLAMA_MODEL: qwen3.5:4b
     depends_on:
       - ollama
     networks: [fintech-network]
@@ -27,6 +27,8 @@ services:
     container_name: compliance-ollama
     ports:
       - "11434:11434"
+    environment:
+       OLLAMA_CONTEXT_LENGTH: "8192"
     volumes:
       - ollama-data:/root/.ollama
     networks: [fintech-network]

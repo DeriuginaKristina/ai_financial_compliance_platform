@@ -11,7 +11,8 @@ app:
     secret: ${TOKENIZATION_SECRET:local-development-secret-change-me}
   ollama:
     base-url: ${OLLAMA_BASE_URL:http://localhost:11434}
-    model: ${OLLAMA_MODEL:llama3.2:3b}
+    model: ${OLLAMA_MODEL:qwen3.5-8k}
+    num-ctx: ${OLLAMA_NUM_CTX:8192}
   payment:
     stellar:
       enabled: ${STELLAR_ENABLED:false}
