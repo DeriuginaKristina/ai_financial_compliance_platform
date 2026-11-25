@@ -78,9 +78,13 @@ public class OllamaComplianceAdvisor {
           ObjectMapper mapper) {
 
     SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
-    requestFactory.setConnectTimeout(Duration.ofSeconds(2));
-    requestFactory.setReadTimeout(Duration.ofSeconds(90));
 
+    requestFactory.setConnectTimeout(Duration.ofSeconds(5));
+    requestFactory.setReadTimeout(Duration.ofSeconds(240));
+
+   /* requestFactory.setConnectTimeout(Duration.ofSeconds(2));
+    requestFactory.setReadTimeout(Duration.ofSeconds(90));
+*/
     this.client = RestClient.builder()
             .baseUrl(baseUrl)
             .requestFactory(requestFactory)
